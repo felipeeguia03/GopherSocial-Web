@@ -9,6 +9,7 @@ interface User {
   email: string
   is_active: boolean
   created_at: string
+  is_following: boolean
 }
 
 export function SearchPage() {
@@ -31,7 +32,13 @@ export function SearchPage() {
   useEffect(() => {
     fetch(`${API_URL}/users/suggested`, { headers: authHeaders })
       .then(r => r.json())
-      .then(json => setSuggested(json.data ?? []))
+      .then(json => {
+        const users: User[] = json.data ?? []
+        setSuggested(users)
+        const init: Record<number, boolean> = {}
+        users.forEach(u => { init[u.id] = u.is_following })
+        setFollowed(prev => ({ ...init, ...prev }))
+      })
       .catch(() => {})
   }, [])
 
@@ -53,7 +60,11 @@ export function SearchPage() {
           setError(json.error || 'Error buscando usuarios')
           setResults([])
         } else {
-          setResults(json.data ?? [])
+          const users: User[] = json.data ?? []
+          setResults(users)
+          const init: Record<number, boolean> = {}
+          users.forEach(u => { init[u.id] = u.is_following })
+          setFollowed(prev => ({ ...prev, ...init }))
         }
       } catch {
         setError('Error de conexión')

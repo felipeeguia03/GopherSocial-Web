@@ -20,7 +20,7 @@ function Layout() {
       <Navbar />
       <Outlet />
       <footer className="site-footer">
-        Gopher<span>Social</span> · by Felipe Eguia Cima
+        <span className="footer-brand">By <span className="footer-brand-white">Felipe</span> Eguia <span className="footer-brand-white">Cima</span></span>
         <a
           href="https://gophersocial.onrender.com/v1/swagger/index.html"
           target="_blank"
