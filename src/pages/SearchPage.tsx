@@ -132,7 +132,7 @@ export function SearchPage() {
                     >
                       {followLoading[user.id]
                         ? <span className="spinner" />
-                        : isFollowing ? 'Dejar de seguir' : 'Seguir'
+                        : isFollowing ? 'Siguiendo' : 'Seguir'
                       }
                     </button>
                   )}
@@ -183,7 +183,7 @@ export function SearchPage() {
                   >
                     {followLoading[user.id]
                       ? <span className="spinner" />
-                      : isFollowing ? 'Dejar de seguir' : 'Seguir'
+                      : isFollowing ? 'Siguiendo' : 'Seguir'
                     }
                   </button>
                 )}

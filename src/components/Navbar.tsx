@@ -33,8 +33,17 @@ export function Navbar() {
                   to="/search"
                   className={({ isActive }) => isActive ? 'nav-active' : ''}
                 >
-                  Buscar
+                  Explorar
                 </NavLink>
+              </li>
+              <li>
+                <a
+                  href="https://gophersocial.onrender.com/v1/swagger/index.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  API Docs
+                </a>
               </li>
               <li>
                 <NavLink
