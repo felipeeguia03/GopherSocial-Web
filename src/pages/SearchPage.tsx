@@ -18,15 +18,22 @@ export function SearchPage() {
   const [results, setResults] = useState<User[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  // track follow state per user id
   const [followed, setFollowed] = useState<Record<number, boolean>>({})
   const [followLoading, setFollowLoading] = useState<Record<number, boolean>>({})
+  const [suggested, setSuggested] = useState<User[]>([])
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const authHeaders = {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${token}`,
   }
+
+  useEffect(() => {
+    fetch(`${API_URL}/users/suggested`, { headers: authHeaders })
+      .then(r => r.json())
+      .then(json => setSuggested(json.data ?? []))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
@@ -96,6 +103,45 @@ export function SearchPage() {
           </button>
         )}
       </div>
+
+      {!query && suggested.length > 0 && (
+        <>
+          <h2 style={{ margin: '1.5rem 0 0.75rem' }}>Recomendados</h2>
+          <div className="post-list">
+            {suggested.map(user => {
+              const isMe = user.id === myId
+              const isFollowing = followed[user.id] ?? false
+              return (
+                <div key={user.id} className="profile-card" style={{ cursor: 'default' }}>
+                  <div
+                    style={{ display: 'flex', alignItems: 'center', gap: '1rem', flex: 1, cursor: 'pointer' }}
+                    onClick={() => navigate(`/users/${user.id}`)}
+                  >
+                    <div className="profile-avatar">{initials(user.username)}</div>
+                    <div className="profile-info">
+                      <div className="profile-username">{user.username}</div>
+                      <div className="profile-email">{user.email}</div>
+                    </div>
+                  </div>
+                  {!isMe && (
+                    <button
+                      className={isFollowing ? 'btn-secondary' : 'btn-primary'}
+                      onClick={() => handleFollow(user)}
+                      disabled={followLoading[user.id]}
+                      style={{ flexShrink: 0 }}
+                    >
+                      {followLoading[user.id]
+                        ? <span className="spinner" />
+                        : isFollowing ? 'Dejar de seguir' : 'Seguir'
+                      }
+                    </button>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )}
 
       {error && <div className="error-msg">{error}</div>}
 
