@@ -9,6 +9,7 @@ interface User {
   email: string
   is_active: boolean
   created_at: string
+  is_following: boolean
   role: { name: string }
 }
 
@@ -60,7 +61,10 @@ export function ProfilePage() {
       .then(r => r.json())
       .then(json => {
         if (json.error) setError(json.error)
-        else setUser(json.data)
+        else {
+          setUser(json.data)
+          setFollowing(json.data?.is_following ?? false)
+        }
       })
       .catch(() => setError('Error de conexión'))
       .finally(() => setLoading(false))
@@ -133,7 +137,7 @@ export function ProfilePage() {
               onClick={handleFollow}
               disabled={followLoading}
             >
-              {followLoading ? <span className="spinner" /> : following ? 'Dejar de seguir' : 'Seguir'}
+              {followLoading ? <span className="spinner" /> : following ? 'Siguiendo' : 'Seguir'}
             </button>
           )}
         </div>
