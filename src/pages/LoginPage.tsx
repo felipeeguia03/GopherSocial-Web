@@ -23,7 +23,8 @@ export function LoginPage() {
       })
       const json = await res.json()
       if (!res.ok) {
-        setError(json.error || 'Credenciales inválidas')
+        const msg = (json.error || '').toLowerCase()
+        setError(msg.includes('unauthorized') ? 'Mail o contraseña incorrectos' : (json.error || 'Credenciales inválidas'))
         return
       }
       login(json.data)
